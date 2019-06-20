@@ -1,14 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { addToCart } from "./store/actions/shoppingCartActions";
+
+/*import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./App.css";
 import CheckoutButtonComponent from "./CheckoutButtonComponent.js";
 import ProductsComponent from "./ProductsComponent.js";
 import parrot1 from "./parrot1.jpg";
 import dog1 from "./dog1.jpg";
-import { DisplayCart } from "./DisplayCart";
+import { DisplayCart } from "./DisplayCart";*/
 
 class App extends React.Component {
-  constructor(props) {
+  /*constructor(props) {
     super(props);
     this.state = {
       clicks: 0,
@@ -88,4 +91,60 @@ class App extends React.Component {
   };
 }
 
-export default App;
+export default App;*/
+  handleClick = id => {
+    this.props.addToCart(id);
+  };
+
+  render() {
+    let itemList = this.props.items.map(item => {
+      return (
+        <div key={item.id}>
+          <div>
+            <img src={item.img} alt={item.title} />
+            <span className="card-title">{item.title}</span>
+            <span
+              to="/"
+              onClick={() => {
+                this.handleClick(item.id);
+              }}
+            >
+              <i>add</i>
+            </span>
+          </div>
+
+          <div>
+            <p>{item.desc}</p>
+            <p>
+              <b>Price: {item.price}$</b>
+            </p>
+          </div>
+        </div>
+      );
+    });
+
+    return (
+      <div className="container">
+        <h3 className="center">Our items</h3>
+        <div className="box">{itemList}</div>
+      </div>
+    );
+  }
+}
+const mapStateToProps = state => {
+  return {
+    id: state.petName
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    addToCart: id => {
+      dispatch(addToCart(id));
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
